@@ -1,59 +1,58 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import {
   Menu,
   BookOpen,
-  Users,
-  GraduationCap,
-  Phone,
   User,
   LogIn,
   ChevronDown,
-  Home,
-  Info,
-  MessageSquare,
-} from "lucide-react"
+} from "lucide-react";
+import { DialogTitle } from "../ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface NavbarProps {
   user?: {
-    name: string
-    email: string
-    role: "student" | "teacher" | "admin" | "parent"
-  } | null
-  onLoginClick: () => void
-  onLogout: () => void
+    name: string;
+    email: string;
+    role: "student" | "teacher" | "admin" | "parent";
+  } | null;
+  onLoginClick: () => void;
+  onLogout: () => void;
+}
+
+interface SubmenuItem {
+  name: string;
+  href: string;
+}
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  badge?: string;
+  submenu?: SubmenuItem[];
 }
 
 export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const navigationItems = [
-    {
-      name: "Home",
-      href: "/",
-      // icon: Home,
-    },
-    {
-      name: "About Us",
-      href: "/about",
-      // icon: Info,
-    },
+  const navigationItems: NavigationItem[] = [
+    { name: "Home", href: "/" },
+    { name: "About Us", href: "/about" },
     {
       name: "Courses",
       href: "/courses",
-      // icon: BookOpen,
       submenu: [
         { name: "Noorani Course", href: "/courses#noorani" },
         { name: "Nazera Course", href: "/courses#najera" },
@@ -63,33 +62,12 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
         { name: "Kamil Course", href: "/courses#kamil" },
       ],
     },
-    {
-      name: "Teachers",
-      href: "/teachers",
-      // icon: Users,
-    },
-    {
-      name: "Admission",
-      href: "/admission",
-      // icon: GraduationCap,
-      badge: "New",
-    },
-    {
-      name: "FAQ",
-      href: "/faq",
-      // icon: MessageSquare,
-    },
-    {
-      name: "Testimonials",
-      href: "/testimonials",
-      // icon: MessageSquare,
-    },
-    {
-      name: "Contact",
-      href: "/contact",
-      // icon: Phone,
-    },
-  ]
+    { name: "Teachers", href: "/teachers" },
+    { name: "Admission", href: "/admission", badge: "New" },
+    { name: "FAQ", href: "/faq" },
+    { name: "Testimonials", href: "/testimonials" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   const getRoleColor = (role: string) => {
     const colors = {
@@ -97,9 +75,9 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
       teacher: "bg-green-100 text-green-800",
       admin: "bg-purple-100 text-purple-800",
       parent: "bg-orange-100 text-orange-800",
-    }
-    return colors[role as keyof typeof colors] || "bg-gray-100 text-gray-800"
-  }
+    };
+    return colors[role as keyof typeof colors] || "bg-gray-100 text-gray-800";
+  };
 
   const getRoleText = (role: string) => {
     const roles = {
@@ -107,9 +85,9 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
       teacher: "Teacher",
       admin: "Admin",
       parent: "Parent",
-    }
-    return roles[role as keyof typeof roles] || role
-  }
+    };
+    return roles[role as keyof typeof roles] || role;
+  };
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -134,13 +112,19 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="flex items-center space-x-1">
-                        {/* <item.icon className="w-4 h-4" /> */}
                         <span>{item.name}</span>
                         <ChevronDown className="w-3 h-3" />
-                        {item.badge && <Badge className="ml-1 text-xs bg-red-500 text-white">{item.badge}</Badge>}
+                        {item.badge && (
+                          <Badge className="ml-1 text-xs bg-red-500 text-white">
+                            {item.badge}
+                          </Badge>
+                        )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-48">
+                      <VisuallyHidden>
+                        <DialogTitle>{item.name}</DialogTitle>
+                      </VisuallyHidden>
                       {item.submenu.map((subItem, subIndex) => (
                         <DropdownMenuItem key={subIndex} asChild>
                           <Link href={subItem.href} className="w-full">
@@ -153,9 +137,12 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
                 ) : (
                   <Button variant="ghost" asChild className="flex items-center space-x-1">
                     <Link href={item.href}>
-                      {/* <item.icon className="w-4 h-4" /> */}
                       <span>{item.name}</span>
-                      {item.badge && <Badge className="ml-1 text-xs bg-red-500 text-white">{item.badge}</Badge>}
+                      {item.badge && (
+                        <Badge className="ml-1 text-xs bg-red-500 text-white">
+                          {item.badge}
+                        </Badge>
+                      )}
                     </Link>
                   </Button>
                 )}
@@ -174,7 +161,9 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
                     </div>
                     <div className="text-left">
                       <div className="text-sm font-medium">{user.name}</div>
-                      <Badge className={`text-xs ${getRoleColor(user.role)}`}>{getRoleText(user.role)}</Badge>
+                      <Badge className={`text-xs ${getRoleColor(user.role)}`}>
+                        {getRoleText(user.role)}
+                      </Badge>
                     </div>
                     <ChevronDown className="w-3 h-3" />
                   </Button>
@@ -185,67 +174,31 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
                     <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="w-full">
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="w-full">
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/profile">Profile</Link></DropdownMenuItem>
+
                   {user.role === "student" && (
                     <>
-                      <DropdownMenuItem asChild>
-                        <Link href="/results" className="w-full">
-                          Results
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/attendance" className="w-full">
-                          Attendance
-                        </Link>
-                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/results">Results</Link></DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/attendance">Attendance</Link></DropdownMenuItem>
                     </>
                   )}
                   {user.role === "teacher" && (
                     <>
-                      <DropdownMenuItem asChild>
-                        <Link href="/classes" className="w-full">
-                          Classes
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/students" className="w-full">
-                          Students
-                        </Link>
-                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/classes">Classes</Link></DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/students">Students</Link></DropdownMenuItem>
                     </>
                   )}
                   {user.role === "admin" && (
                     <>
-                      <DropdownMenuItem asChild>
-                        <Link href="/admin" className="w-full">
-                          Administration
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/reports" className="w-full">
-                          Reports
-                        </Link>
-                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/admin">Administration</Link></DropdownMenuItem>
+                      <DropdownMenuItem asChild><Link href="/reports">Reports</Link></DropdownMenuItem>
                     </>
                   )}
+
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings" className="w-full">
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onLogout} className="text-red-600">
-                    Logout
-                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
+                  <DropdownMenuItem onClick={onLogout} className="text-red-600">Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -256,7 +209,7 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu */}
           <div className="lg:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
@@ -266,8 +219,8 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
                 <div className="flex flex-col h-full">
-                  {/* Mobile Header */}
-                  <div className="flex items-center justify-between pb-4 border-b py-2 pl-3">
+                  {/* Mobile Logo */}
+                  <div className="flex items-center justify-between border-b py-3 px-3">
                     <div className="flex items-center space-x-2">
                       <div className="bg-green-600 text-white p-2 rounded-lg">
                         <BookOpen className="w-5 h-5" />
@@ -281,7 +234,7 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
 
                   {/* User Info (Mobile) */}
                   {user && (
-                    <div className="py-4 border-b">
+                    <div className="py-4 border-b px-3">
                       <div className="flex items-center space-x-3">
                         <div className="bg-green-100 p-2 rounded-full">
                           <User className="w-5 h-5 text-green-600" />
@@ -295,83 +248,32 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
                   )}
 
                   {/* Mobile Navigation */}
-                  <div className="flex-1 py-4">
-                    <div className="space-y-2">
-                      {navigationItems.map((item, index) => (
-                        <div key={index}>
-                          <Link
-                            href={item.href}
-                            onClick={() => setIsOpen(false)}
-                            className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                          >
-                            {/* <item.icon className="w-5 h-5 text-gray-600" /> */}
-                            <span className="text-gray-800">{item.name}</span>
-                            {item.badge && (
-                              <Badge className="ml-auto text-xs bg-red-500 text-white">{item.badge}</Badge>
-                            )}
-                          </Link>
-                          {item.submenu && (
-                            <div className="ml-8 mt-2 space-y-1">
-                              {item.submenu.map((subItem, subIndex) => (
-                                <Link
-                                  key={subIndex}
-                                  href={subItem.href}
-                                  onClick={() => setIsOpen(false)}
-                                  className="block px-3 py-1 text-sm text-gray-600 hover:text-green-600 transition-colors"
-                                >
-                                  {subItem.name}
-                                </Link>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* User Menu Items (Mobile) */}
-                    {user && (
-                      <div className="mt-6 pt-4 border-t space-y-2">
-                        <Link
-                          href="/dashboard"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <User className="w-5 h-5 text-gray-600" />
-                          <span className="text-gray-800">Dashboard</span>
+                  <div className="flex-1 py-4 space-y-2 px-3">
+                    {navigationItems.map((item, index) => (
+                      <div key={index}>
+                        <Link href={item.href} onClick={() => setIsOpen(false)} className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                          <span className="text-gray-800">{item.name}</span>
+                          {item.badge && <Badge className="ml-auto text-xs bg-red-500 text-white">{item.badge}</Badge>}
                         </Link>
-                        <Link
-                          href="/profile"
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <User className="w-5 h-5 text-gray-600" />
-                          <span className="text-gray-800">Profile</span>
-                        </Link>
+                        {item.submenu && (
+                          <div className="ml-6 mt-1 space-y-1">
+                            {item.submenu.map((sub, subIndex) => (
+                              <Link key={subIndex} href={sub.href} onClick={() => setIsOpen(false)} className="block text-sm text-gray-600 hover:text-green-600">
+                                {sub.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
 
                   {/* Mobile Login/Logout */}
-                  <div className="pt-4 border-t">
+                  <div className="px-3 pt-4 border-t">
                     {user ? (
-                      <Button
-                        onClick={() => {
-                          onLogout()
-                          setIsOpen(false)
-                        }}
-                        variant="outline"
-                        className="w-full text-red-600 border-red-200 hover:bg-red-50"
-                      >
-                        Logout
-                      </Button>
+                      <Button onClick={() => { onLogout(); setIsOpen(false); }} variant="outline" className="w-full text-red-600 border-red-200 hover:bg-red-50">Logout</Button>
                     ) : (
-                      <Button
-                        onClick={() => {
-                          onLoginClick()
-                          setIsOpen(false)
-                        }}
-                        className="w-full bg-green-600 hover:bg-green-700"
-                      >
+                      <Button onClick={() => { onLoginClick(); setIsOpen(false); }} className="w-full bg-green-600 hover:bg-green-700">
                         <LogIn className="w-4 h-4 mr-2" />
                         Login
                       </Button>
@@ -384,5 +286,5 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
         </div>
       </div>
     </nav>
-  )
+  );
 }

@@ -44,7 +44,7 @@ export default function Footer() {
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
           {/* About Section */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-6 text-green-400">Madrasa as sunnah</h3>
+            <h3 className="text-2xl font-bold mb-6 text-green-400">As sunnah madrasa </h3>
             <p className="text-gray-300 leading-relaxed mb-6">
               Dedicated to providing quality Islamic education since 2003. Our goal is to create ideal Muslims in the
               light of the Quran and Sunnah.
