@@ -35,6 +35,7 @@ interface NavbarProps {
 interface SubmenuItem {
   name: string;
   href: string;
+  badge?: string;
 }
 
 interface NavigationItem {
@@ -63,7 +64,7 @@ export default function Navbar({ user, onLoginClick, onLogout }: NavbarProps) {
       ],
     },
     { name: "Teachers", href: "/teachers" },
-    { name: "Admission", href: "/admission", badge: "New" },
+    { name: "Admission", href: "/admission", badge: 'New' },
     { name: "FAQ", href: "/faq" },
     { name: "Testimonials", href: "/testimonials" },
     { name: "Contact", href: "/contact" },
